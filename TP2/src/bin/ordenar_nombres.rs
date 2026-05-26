@@ -11,11 +11,19 @@ fn ordenar_nombres (data: &mut [String; 5]){
 }
 }
 
-[#test]	
+#[test]	
 fn test() {
    let mut arreglo:String = ["Martinez","Aaron","Zara","Carlos","1"].to_string();
    ordenar_nombres(&mut arreglo);
    assert_eq!(arreglo,["1","Aaron","Carlos","Martinez","Zara"]);
 }
-
+#[should_panic="datos insuficientes"]
+#[test]
+fn test_insuficiente{
+	let mut arreglo:String = ["a";4].to_string();
+	ordenar_nombres(&mut arreglo);
+	if arreglo.len()!=5{
+		panic!("datos insuficientes");
+	}
+}
 

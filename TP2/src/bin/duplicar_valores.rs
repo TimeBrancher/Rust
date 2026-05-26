@@ -6,9 +6,19 @@ fn duplicar_valores ( data:[f32; 5])->[f32;5]{
 	arreglo
 }
 #[test]	
-fn test() {
+fn test_correcto() {
    let arreglo = [3.2,5.1,9.5,21.89,3.14];
-   let arreglo2 = duplicar_valores(arreglo);
-   assert_eq!(arreglo2, [6.4,10.2,19.0,43.78,6.28]);
-   assert_neq!(arreglo2, [9.6,15.3,28.5,65.67,0.42]);
+   assert_eq!(duplicar_valores(arreglo),[3.2,5.1,9.5,21.89,3.19]);}
+#[should_panic="Arreglo incorrecto de tamaño"]
+#[test]
+fn test_largo(){
+	let arreglo = [3.2,1.5,2.3,9.6];
+	if arreglo.len()!=5{
+		panic!("Arreglo incorrecto de tamaño");
+	}
+}
+#[test]
+fn test_incorrecto(){
+	let arreglo = [3.5,1.5,2.5,6.5,9.5]
+	assert_ne!(duplicar_valores(arreglo));
 }

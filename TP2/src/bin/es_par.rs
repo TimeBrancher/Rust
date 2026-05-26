@@ -4,7 +4,9 @@ fn es_par ( data:i32)->bool{
 
 
 #[test]
-fn test(){
-	assert_eq!(es_par(2),true);
+fn test_par(){
+	assert_eq!(es_par(2),true);}
+#[test]
+fn test_impar(){
 	assert_eq!(es_par(3),false);
 }
