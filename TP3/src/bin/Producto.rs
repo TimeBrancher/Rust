@@ -1,42 +1,67 @@
 struct Producto{
 	nombre:String,
-	precio_bruto:f64,
+	precio_bruto:Option<f64>,
 	identificador:String,
 
 }
 
 impl Producto{
-	fn new(nombre:String,precio_bruto:f64,identificador:String) -> Producto{
+	fn new(nombre:String,precio_bruto:Option<f64>,identificador:String) -> Producto{
 		Producto{
 			nombre,
 			precio_bruto,
 			identificador,
 		}
 	}
-	fn calcularImpuesto(impuesto:i32) -> f64{
-		impuesto_proc:f64 = impuesto/100;
-		precio_bruto * impuesto_proc
+	fn calcular_impuesto(&self,impuesto:Option<i32>) -> Option<f64>{
+		let mut res:Option<f64> = None;
+		if impuesto.is_some() && self.precio_bruto.is_some(){
+			let conversion:f64 = impuesto.unwrap() as f64;
+			res = Some(self.precio_bruto.unwrap() * (conversion/100.0));
+			}
+		res
 	}
-	fn calcularDescuento(descuento:i32) -> f64{
-		descuento_proc:f64 = descuento/100;
-		precio_bruto * descuento_proc
+	fn calcular_descuento(&self, descuento:Option<i32>) -> Option<f64>{
+		let mut res:Option<f64> = None;
+		if descuento.is_some() && self.precio_bruto.is_some(){
+			let conversion:f64 = descuento.unwrap() as f64;
+			res = Some(self.precio_bruto.unwrap() * (conversion/100.0));
+		}
+		res
 	}
-	fn calcularPrecioTotal(impuesto:i32, descuento:i32){
+	fn calcular_precio_total(&mut self,impuesto:Option<i32>, descuento:Option<i32>){
+		let mut imp = 0.0;
+		let mut desc = 0.0;
 		let mut tot = 0.0;
-		match impuesto = {
-			Some(n) => tot = self.precio + calcularImpuesto(impuesto);  
-			none => __
-	}
-		match descuento = {
-			Some(n) => tot = tot + tot * (descuento/100),
-			none => __
-	}
+		if self.precio_bruto.is_some(){
+			tot = self.precio_bruto.unwrap();
+			if impuesto.is_some(){imp = self.calcular_impuesto(impuesto).unwrap();}
+			if descuento.is_some(){desc = self.calcular_descuento(descuento).unwrap();}}
+		tot = tot + imp - desc;
+		self.precio_bruto = Some(tot);
 		
-		tot
+	}
 
 }
 
-fn main(){}
-
-
-//parametros opcionales
+#[test]
+fn impuesto_test(){
+	let producto = Producto::new("Pava".to_string(),Some(3.0),"PV".to_string());
+	assert_eq!(producto.calcular_impuesto(Some(20)),Some(0.6000000000000001));
+}
+#[test]
+fn descuento_test(){
+	let producto = Producto::new("Pava".to_string(),Some(3.0),"PV".to_string());
+	assert_eq!(producto.calcular_descuento(Some(20)),Some(0.6000000000000001));
+}
+#[test]
+fn calcular_precio_total(){
+	let mut producto = Producto::new("Pava".to_string(),Some(3.0),"PV".to_string());
+	producto.calcular_precio_total(Some(20),Some(35));
+	assert_eq!(producto.precio_bruto,Some(2.5500000000000003));
+}
+#[test]
+fn test_sin_valor(){
+	let producto_valor = Producto::new("Pava".to_string(),None,"PV".to_string());
+	assert_eq!(producto_valor.calcular_descuento(Some(20)),None);
+}
